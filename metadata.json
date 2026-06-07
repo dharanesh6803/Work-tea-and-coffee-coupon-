@@ -1,0 +1,6 @@
+{
+  "name": "Tea Coupons & ID Card",
+  "description": "Smart office management application including Tea/Coffee coupon logs, Bangalore Club identity card creator, leave requests, duty rosters, group chat, customizable themes, and AI support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
