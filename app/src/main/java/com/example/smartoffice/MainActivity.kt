@@ -90,11 +90,11 @@ class MainActivity : ComponentActivity() {
         
         CoroutineScope(Dispatchers.Main).launch {
             val existing = employeeDao.getAllEmployees().first()
-            if (existing.isEmpty()) {
-                employeeDao.insert(Employee(name="admin", password="password", role="Admin", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
-            }
             if (!existing.any { it.name == "0000" }) {
-                employeeDao.insert(Employee(name="0000", password="Bangalore club", role="Employee", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
+                employeeDao.insert(Employee(name="0000", password="Bangaloreclub", role="Admin", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
+            }
+            if (existing.isEmpty() && !existing.any { it.name == "admin" }) {
+                employeeDao.insert(Employee(name="admin", password="password", role="Admin", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
             }
         }
         
@@ -207,13 +207,14 @@ fun LoginScreen(employeeDao: EmployeeDao, settingsDao: SettingsDao, onLoginSucce
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = null,
+                Image(
+                    painter = painterResource(id = R.drawable.bangalore_club_logo_1780880713108),
+                    contentDescription = "Bangalore Club Logo",
                     modifier = Modifier
-                        .size(64.dp)
-                        .padding(bottom = 16.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                        .size(100.dp)
+                        .padding(bottom = 16.dp)
+                        .clip(RoundedCornerShape(12.dp)),
+                    contentScale = ContentScale.Fit
                 )
 
                 Text(

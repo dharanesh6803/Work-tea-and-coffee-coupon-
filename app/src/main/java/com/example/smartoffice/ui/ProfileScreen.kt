@@ -17,9 +17,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.foundation.Image
 import coil.compose.AsyncImage
 import com.example.smartoffice.data.Employee
 import com.example.smartoffice.data.EmployeeDao
+import com.example.smartoffice.util.QrUtils
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,23 +73,35 @@ fun ProfileScreen(employee: Employee, employeeDao: EmployeeDao) {
             
             if (showIdCard) {
                 Spacer(modifier = Modifier.height(24.dp))
-                BangaloreClubIdCard(name = name, id = employee.id.toString(), role = employee.role, photoUrl = photoUri)
+                BangaloreClubIdCard(
+                    name = name, 
+                    id = employee.id.toString(), 
+                    role = employee.role, 
+                    photoUrl = photoUri,
+                    email = email
+                )
             }
         }
     }
 }
 
 @Composable
-fun BangaloreClubIdCard(name: String, id: String, role: String, photoUrl: String) {
+fun BangaloreClubIdCard(name: String, id: String, role: String, photoUrl: String, email: String) {
+    val identityQr = remember(id, name, email) { 
+        QrUtils.generateQrCode("Identity: $id\nName: $name\nEmail: $email") 
+    }
+    val teaCouponQr = remember(id) { 
+        QrUtils.generateQrCode("TEA_COUPON:$id") 
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
             .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(modifier = Modifier.fillMaxWidth()) {
             // Background decoration
             Box(modifier = Modifier
                 .fillMaxWidth()
@@ -119,13 +134,51 @@ fun BangaloreClubIdCard(name: String, id: String, role: String, photoUrl: String
                         Text("EMPLOYEE ID: $id", color = Color.Gray, fontSize = 14.sp)
                     }
                 }
-            }
-            
-            // Footer
-            Box(modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)) {
-                Text("AUTHORIZED SIGN", color = Color.LightGray, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Identity QR", style = MaterialTheme.typography.labelSmall, color = Color.DarkGray)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        identityQr?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Identity QR",
+                                modifier = Modifier.size(80.dp)
+                            )
+                        }
+                    }
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Tea/Coupon QR", style = MaterialTheme.typography.labelSmall, color = Color.DarkGray)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        teaCouponQr?.let {
+                            Image(
+                                bitmap = it.asImageBitmap(),
+                                contentDescription = "Tea Coupon QR",
+                                modifier = Modifier.size(80.dp)
+                            )
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                HorizontalDivider(color = Color.LightGray, thickness = 1.dp)
+                
+                Box(modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                    Text(
+                        "AUTHORIZED BY BANGALORE CLUB", 
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.LightGray, 
+                        fontSize = 10.sp, 
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }
