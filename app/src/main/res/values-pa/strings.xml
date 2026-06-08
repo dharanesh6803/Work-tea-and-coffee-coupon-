@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ਸਮਾਰਟ ਆਫਿਸ</string>
+    <string name="login">ਲੌਗਇਨ ਕਰੋ</string>
+    <string name="username">ਈਮੇਲ (ਕਰਮਚਾਰੀ ID)</string>
+    <string name="password">ਪਾਸਵਰਡ</string>
+    <string name="save_changes">ਬਦਲਾਅ ਸੇਵ ਕਰੋ</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">স্মাৰ্ট অফিচ</string>
+    <string name="login">লগইন কৰক</string>
+    <string name="username">ইমেইল (কৰ্মচাৰী ID)</string>
+    <string name="password">পাছৱৰ্ড</string>
+    <string name="save_changes">সলনি সংৰক্ষণ কৰক</string>
+</resources>

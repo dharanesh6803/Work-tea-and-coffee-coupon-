@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">سمارٹ آفس</string>
+    <string name="login">لاگ ان کریں</string>
+    <string name="username">ای میل (ملازم ID)</string>
+    <string name="password">پاس ورڈ</string>
+    <string name="save_changes">تبدیلیاں محفوظ کریں</string>
+</resources>

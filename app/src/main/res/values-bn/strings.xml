@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">স্মার্ট অফিস</string>
+    <string name="login">লগইন করুন</string>
+    <string name="username">ইমেল (কর্মচারী আইডি)</string>
+    <string name="password">পাসওয়ার্ড</string>
+    <string name="save_changes">পরিবর্তনগুলি সংরক্ষণ করুন</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">స్మార్ట్ ఆఫీస్</string>
+    <string name="login">లాగిన్</string>
+    <string name="username">ఇమెయిల్ (ఉద్యోగి ID)</string>
+    <string name="password">పాస్‌వర్డ్</string>
+    <string name="save_changes">మార్పులను సేవ్ చేయి</string>
+</resources>

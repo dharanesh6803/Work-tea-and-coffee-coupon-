@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">સ્માર્ટ ઓફિસ</string>
+    <string name="login">લોગિન કરો</string>
+    <string name="username">ઇમેઇલ (કર્મચારી ID)</string>
+    <string name="password">પાસવર્ડ</string>
+    <string name="save_changes">ફેરફારો સાચવો</string>
+</resources>

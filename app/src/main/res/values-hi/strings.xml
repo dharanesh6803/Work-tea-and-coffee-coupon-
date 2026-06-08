@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">स्मार्ट ऑफिस</string>
+    <string name="login">लॉगिन</string>
+    <string name="username">ईमेल (कर्मचारी आईडी)</string>
+    <string name="password">पासवर्ड</string>
+    <string name="save_changes">परिवर्तन सहेजें</string>
+</resources>

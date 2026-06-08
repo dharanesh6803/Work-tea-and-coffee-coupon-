@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ସ୍ମାର୍ଟ ଅଫିସ୍</string>
+    <string name="login">ଲଗଇନ୍ କରନ୍ତୁ</string>
+    <string name="username">ଇମେଲ୍ (କର୍ମଚାରୀ ID)</string>
+    <string name="password">ପାସୱାର୍ଡ</string>
+    <string name="save_changes">ପରିବର୍ତ୍ତନ ସଂରକ୍ଷଣ କରନ୍ତୁ</string>
+</resources>

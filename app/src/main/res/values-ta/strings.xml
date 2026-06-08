@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">स्मार्ट ऑफिस</string>
+    <string name="login">உள்நுழையவும்</string>
+    <string name="username">மின்னஞ்சல் (ஊழியர் ஐடி)</string>
+    <string name="password">கடவுச்சொல்</string>
+    <string name="save_changes">மாற்றங்களைச் சேமிக்கவும்</string>
+</resources>
