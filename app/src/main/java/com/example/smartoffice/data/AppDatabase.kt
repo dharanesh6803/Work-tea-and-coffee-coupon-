@@ -25,7 +25,7 @@ interface SettingsDao {
     suspend fun updateSettings(settings: UserSettings)
 }
 
-@Database(entities = [Message::class, UserSettings::class, Duty::class, Scan::class, Employee::class, Coupon::class, Consumption::class, LeaveRequest::class], version = 13, exportSchema = false)
+@Database(entities = [Message::class, UserSettings::class, Duty::class, Scan::class, Employee::class, Coupon::class, Consumption::class, LeaveRequest::class], version = 14, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao

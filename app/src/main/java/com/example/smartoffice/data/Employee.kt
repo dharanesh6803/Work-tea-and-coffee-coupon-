@@ -17,5 +17,6 @@ data class Employee(
     val password: String = "dummy123",
     val profilePhotoUri: String? = null,
     val mobile: String = "",
-    val email: String = ""
+    val email: String = "",
+    val isOnline: Boolean = false
 )

@@ -21,9 +21,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.animation.core.*
 import androidx.room.Room
 import com.example.smartoffice.data.AppDatabase
 import com.example.smartoffice.data.CouponDao
@@ -73,8 +89,12 @@ class MainActivity : ComponentActivity() {
         leaveRequestDao = database.leaveRequestDao()
         
         CoroutineScope(Dispatchers.Main).launch {
-            if (employeeDao.getAllEmployees().first().isEmpty()) {
+            val existing = employeeDao.getAllEmployees().first()
+            if (existing.isEmpty()) {
                 employeeDao.insert(Employee(name="admin", password="password", role="Admin", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
+            }
+            if (!existing.any { it.name == "0000" }) {
+                employeeDao.insert(Employee(name="0000", password="Bangalore club", role="Employee", mobile="", email="", leaveStatus="Active", dailyConsumption=0))
             }
         }
         
@@ -124,35 +144,148 @@ class MainActivity : ComponentActivity() {
 fun LoginScreen(employeeDao: EmployeeDao, settingsDao: SettingsDao, onLoginSuccess: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    var visible by remember { mutableStateOf(false) }
+    var isLoaded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        visible = true
+        isLoaded = true
     }
 
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(animationSpec = androidx.compose.animation.core.tween(1000))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.surface
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            Text(stringResource(id = R.string.login))
-            OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text(stringResource(id = R.string.username)) })
-            OutlinedTextField(value = password, onValueChange = { password = it }, label = { Text(stringResource(id = R.string.password)) })
-            Button(onClick = {
-                scope.launch {
-                    val employees = employeeDao.getAllEmployees().first()
-                    val employee = employees.find { it.name == email && it.password == password }
-                    if (employee != null) {
-                        val settings = settingsDao.getSettings().first() ?: UserSettings()
-                        settingsDao.updateSettings(settings.copy(currentUserId = employee.id))
-                        onLoginSuccess()
-                    } else {
-                        Toast.makeText(context, "Invalid login", Toast.LENGTH_SHORT).show()
-                    }
+        // Decorative background elements for "3D" feel
+        Box(
+            modifier = Modifier
+                .size(300.dp)
+                .offset(x = (-100).dp, y = (-200).dp)
+                .graphicsLayer {
+                    rotationZ = 45f
+                    alpha = 0.3f
                 }
-            }) { Text(stringResource(id = R.string.login)) }
+                .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(40.dp))
+        )
+
+        val alpha by animateFloatAsState(
+            targetValue = if (isLoaded) 1f else 0f,
+            animationSpec = tween(durationMillis = 1000),
+            label = "alpha"
+        )
+        val translateY by animateDpAsState(
+            targetValue = if (isLoaded) 0.dp else 100.dp,
+            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
+            label = "translateY"
+        )
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth(0.85f)
+                .graphicsLayer {
+                    this.alpha = alpha
+                    this.translationY = translateY.toPx()
+                    rotationX = 5f // Subtle 3D tilt
+                },
+            shape = RoundedCornerShape(24.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(bottom = 16.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
+                Text(
+                    text = "Welcome Back",
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = "Sign in to your smart office",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.username)) },
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.password)) },
+                    leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        TextButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Text(
+                                text = if (passwordVisible) "HIDE" else "SHOW",
+                                style = MaterialTheme.typography.labelSmall
+                            )
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            val employees = employeeDao.getAllEmployees().first()
+                            val employee = employees.find { it.name == email && it.password == password }
+                            if (employee != null) {
+                                val settings = settingsDao.getSettings().first() ?: UserSettings()
+                                settingsDao.updateSettings(settings.copy(currentUserId = employee.id))
+                                onLoginSuccess()
+                            } else {
+                                Toast.makeText(context, "Invalid login", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.login).uppercase(),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                }
+            }
         }
     }
 }
@@ -276,7 +409,7 @@ fun DashboardScreen(messageDao: MessageDao, settingsDao: SettingsDao, dutyDao: D
                     Divider(modifier = Modifier.padding(vertical = 16.dp))
                     LeaveManagementScreen(leaveRequestDao, currentUser)
                     Divider(modifier = Modifier.padding(vertical = 16.dp))
-                    ChatScreen(messageDao) 
+                    ChatScreen(messageDao, employeeDao) 
                 }
                 3 -> CanteenDashboardScreen(scanDao, employeeDao, consumptionDao, currentUser)
                 4 -> Column { ThemeSettingsScreen(settingsDao); Divider(); DataManagementScreen(settingsDao) }
